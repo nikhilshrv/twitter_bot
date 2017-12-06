@@ -6,13 +6,19 @@ var config = require("./config");
 
 var T = new Twit(config);
 
-tweetIT();
-setInterval(tweetIT, 1000*20);
+//Setting up stream
+var stream = T.stream("user");
 
-function tweetIT() {
+stream.on("follow", followed);
 
-	var rnd = Math.floor(Math.random()*100);
-	var txt = "Back to twitter " + 99;
+function followed (event) {
+	var name = event.source.name;
+	var screenName = event.source.screen_name;
+	tweetIT('.@' + screenName + ' hello there.')
+}
+
+function tweetIT(txt) {
+	
 	var tweet = {
 		status: txt
 	}
@@ -24,7 +30,7 @@ function tweetIT() {
 			console.log("Something went wrong.");
 			console.log("//" + err);
 		} else {
-			console.log("It worked");
+			console.log("It worked.");
 		}
 	}
 };
